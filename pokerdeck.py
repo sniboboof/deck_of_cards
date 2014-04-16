@@ -1,18 +1,76 @@
 import random
 
 
+#global card name translations for string inputs
+#to save time and memory from making a dictionary every time a card is made
+CARD_VALUES_SPECIAL_NAMES = {
+    'Ace': 1, 'Jack': 11, 'Queen': 12, 'King': 13
+}
+CARD_VALUES_SPECIAL_NAMES_REVERSE = {
+    v: k for k, v in CARD_VALUES_SPECIAL_NAMES.items()
+}
+
+CARD_SUITS = {
+    0: 'Clubs', 1: 'Diamonds', 2: 'Hearts', 3: 'Spades'
+}
+
+
 #individual cards
 #a hand is basically a list of cards
 #a deck is basically a d.e.queue
 class Card():
-    def __init__(self, value, suit):
-        pass
+    def __init__(self, value=None, suit=None):
+        #assumes 4 suits and 13 values when determining identity randomly
+        #but if values and suits are specified (and the suit is defined)
+        #any number of either can be used
+        if value is None:
+            value = random.randrange(1, 14)
+        if suit is None:
+            suit = random.randrange(0, 4)
+
+        #value can be given either as a string or an int
+        myValue = None
+        if isinstance(value, str):
+            try:
+                myValue = CARD_VALUES_SPECIAL_NAMES[value.capitalize()]
+            except KeyError:
+                myValue = int(value)
+        elif isinstance(value, int):
+            myValue = value
+        else:
+            raise TypeError
+        self.value = myValue
+
+        mySuit = None
+        if isinstance(suit, str):
+            if suit.capitalize() in CARD_SUITS.values():
+                mySuit = suit.capitalize()
+            else:
+                raise KeyError
+        elif isinstance(suit, int):
+            mySuit = CARD_SUITS[suit]
+        else:
+            raise TypeError
+        self.suit = mySuit
 
     def __str__(self):
-        pass
+        start = ""
+        try:
+            start = CARD_VALUES_SPECIAL_NAMES_REVERSE[self.value]
+        except KeyError:
+            start = str(self.value)
 
-    def __cmp__(self, operand):
-        pass
+        middle = " of "
+
+        end = self.suit
+
+        return start+middle+end
+
+    def __cmp__(self, opponent):
+        if isinstance(opponent, Card):
+            return self.value.__cmp__(opponent.value)
+        else:
+            return NotImplemented
 
 
 #designed to behave like a real deck
