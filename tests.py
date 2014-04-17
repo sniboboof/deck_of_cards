@@ -64,13 +64,11 @@ class DeckCase(unittest.TestCase):
         mydek = Deck()
         assert mydek is not None
         self.assertEqual(mydek.cards[0], Card(1, 0))
-        self.assertEqual(mydek.cards[51], Card(13, 3))
-        self.assertRaises(IndexError, mydek.cards.get(52))
+        self.assertEqual(mydek.cards[-1], Card(13, 3))
 
         smalldek = Deck([Card(1, 0)])
         assert smalldek is not None
         self.assertEqual(smalldek.cards[0], Card(1, 0))
-        self.assertRaises(IndexError, smalldek.cards.get(1))
 
         meddek = Deck([Card(1, 0), Card('Queen', 'Hearts'), Card(1, 0)])
         self.assertEqual(meddek.cards[0], meddek.cards[2])

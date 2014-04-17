@@ -1,4 +1,6 @@
 import random
+from copy import deepcopy
+from collections import deque
 
 
 #global card name translations for string inputs
@@ -84,32 +86,65 @@ class Card():
 #two functions have hidden booleans to change normal behavior
 #they can be used to covertly give people a known card
 class Deck():
-    def __init__(self, cards):
-        pass
+    def __init__(self, cards=None):
+        if cards is None:
+            self.cards = deque()
+            for soot in xrange(4):
+                for valoo in xrange(1, 14):
+                    self.cards.append(Card(valoo, soot))
+        else:
+            self.cards = deque(cards)
 
     def __len__(self):
-        pass
+        return len(self.cards)
+
+    def __eq__(self, other):
+        if isinstance(other, Deck):
+            return self.cards == other.cards
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, Deck):
+            return not (self.cards == other.cards)
+        else:
+            return NotImplemented
 
     def shuffle(self):
-        pass
+        # have to convert cards to a list or shuffling is too slow
+        tempCards = list(self.cards)
+        random.shuffle(tempCards)
+        self.cards = deque(tempCards)
 
     def sort(self):
-        pass
+        tempCardSuits = {}
+        for card in self.cards:
+            tempCardSuits.setdefault(card.suit, [])
+            tempCardSuits[card.suit].append(card)
+
+        for key in tempCardSuits.keys():
+            tempCardSuits[key].sort()
+
+        self.cards = deque()
+        for i in xrange(len(CARD_SUITS.keys())):
+            for card in tempCardSuits.get(CARD_SUITS[i], []):
+                self.cards.append(card)
 
     #reveal functions show a card without modifying the deck
     #like a real deck, if you don't want information about the card's location
     #you have to shuffle afterwards
     def topDeck(self):
-        pass
+        return str(self.cards[-1])
 
     def botDeck(self):
-        pass
+        return str(self.cards[0])
 
     def cut(self):
-        pass
+        #this function is slower than actual cutting, O(n)
+        return str(self.cards[random.randrange(len(self))])
 
     #the only function that reduces deck size
-    #has a hidden overload
+    #has a hidden overload to deal from the bottom instead of the top
     def deal(self, count=1, bottom=False):
         pass
 
