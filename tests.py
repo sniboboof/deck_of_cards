@@ -125,26 +125,24 @@ class DeckCase(unittest.TestCase):
 
     def testDeal(self):
         mydek = Deck([])
-        self.assertRaises(IndexError, mydek.deal())
+        self.assertRaises(IndexError, mydek.deal)
 
         mydek = Deck([Card('queen', 'hearts')])
         myhand = []
-        self.assertRaises(IndexError, mydek.deal(2))
-        myhand.append(mydek.deal())
+        self.assertRaises(IndexError, mydek.deal, 2)
+        myhand += mydek.deal()
         self.assertEqual(myhand[0], Card('queen', 'hearts'))
         assert myhand[0] not in mydek.cards
-        self.assertEqual(len(myhand), 51)
+        self.assertEqual(len(mydek), 0)
 
         mydek = Deck()
-        myhand = []
-        myhand.append(mydek.deal(2))
+        myhand = mydek.deal(2)
         self.assertEqual(myhand, [Card('king', 'spades'),
                                   Card('queen', 'spades')])
 
         #if they find out this overload exists, you could get shot
         mydek = Deck()
-        myhand = []
-        myhand.append(mydek.deal(2, True))
+        myhand = mydek.deal(2, True)
         self.assertEqual(myhand, [Card('ace', 'clubs'),
                                   Card('2', 'clubs')])
 
@@ -159,7 +157,7 @@ class DeckCase(unittest.TestCase):
         mydek.put(copy(toBot))
 
         self.assertEqual(len(mydek), 5)
-        self.assertEqual(mydek.cards, toBot+start+toTop)
+        self.assertEqual(mydek, Deck(toBot+start+toTop))
 
     def testShuffleIn(self):
         mydek = Deck()

@@ -146,12 +146,25 @@ class Deck():
     #the only function that reduces deck size
     #has a hidden overload to deal from the bottom instead of the top
     def deal(self, count=1, bottom=False):
-        pass
+        hand = []
+        if count > len(self):
+            raise IndexError
+        if bottom:
+            for i in xrange(count):
+                hand.append(self.cards.popleft())
+        else:
+            for i in xrange(count):
+                hand.append(self.cards.pop())
+        return hand
 
     #the two ways to put cards back into the deck
     #put has a hidden overload to put cards on top instead of where they belong
-    def put(self, cards, top=False):
-        pass
+    def put(self, hand, top=False):
+        if top:
+            self.cards.extend(hand)
+        else:
+            hand.reverse()
+            self.cards.extendleft(hand)
 
-    def shuffleIn(self, cards):
+    def shuffleIn(self, hand):
         pass
