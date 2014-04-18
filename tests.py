@@ -1,6 +1,6 @@
 import unittest
 from pokerdeck import Deck, Card, CARD_SUITS
-from copy import copy
+from copy import copy, deepcopy
 
 
 class CardCase(unittest.TestCase):
@@ -161,8 +161,9 @@ class DeckCase(unittest.TestCase):
 
     def testShuffleIn(self):
         mydek = Deck()
-        imitation = copy(mydek)
+        imitation = deepcopy(mydek)
         mydek.deal(2)
+        self.assertNotEqual(mydek, imitation)
         mydek.shuffleIn([Card('king', 'spades'),
                          Card('queen', 'spades')])
         self.assertNotEqual(mydek, imitation)

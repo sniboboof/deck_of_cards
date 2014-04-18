@@ -167,4 +167,33 @@ class Deck():
             self.cards.extendleft(hand)
 
     def shuffleIn(self, hand):
-        pass
+        hand = deque(hand)
+        #preserves order of the deck
+        #and the order of the cards shuffled into the deck
+        insertPoints = sorted(random.sample(range(len(self)), len(hand)))
+        insertPoints = deque(insertPoints)
+
+        #startPointer tracks where the bottom of the deck is
+        #if we're inserting to 0, then the bottom of the deck changes
+        startPointer = None
+        if insertPoints[0] == 0:
+            self.cards.appendleft(hand.popleft())
+            startPointer = self.cards[0]
+            self.cards.rotate(-1)
+            insertPoints.popleft()
+        else:
+            startPointer = self.cards[0]
+
+        #main loop goes through each insert point
+        #rotates the deck to the right point
+        #and puts the card on the bottom
+        prevInsert = 0
+        for insert in insertPoints:
+            self.cards.rotate(-1 * (insert-prevInsert-1))
+            self.cards.appendleft(hand.popleft())
+            prevInsert = insert
+
+        #finally, return the list back to where it was
+        #alternatively i could have just mathed the last insert with some lens
+        while self.cards[0] is not startPointer:
+            self.cards.rotate(-1)
